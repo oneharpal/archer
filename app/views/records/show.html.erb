@@ -4,7 +4,8 @@
 
 <div>
   <%= link_to "Edit this record", edit_record_path(@record) %> |
-  <%= link_to "Back to records", records_path %>
+  <%= link_to "Back to records", records_path %> |
+  <%= link_to "Show this project", @record.project %> |
 
-  <%= button_to "Destroy this record", @record, method: :delete %>
+  <%#= button_to "Destroy this record", @record, method: :delete %>
 </div>
