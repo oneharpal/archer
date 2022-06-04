@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_project, only: %i[ show edit update destroy ]
   before_action :not_permitted, only: %i[ destroy ]
-
   # GET /projects or /projects.json
   def index
     @projects = Project.all
@@ -76,5 +76,5 @@ class ProjectsController < ApplicationController
         format.html { redirect_to project_url(@project), notice: "Restricted." }
         format.json { render :show, status: :created, location: @project }
       end
-      end
+    end
 end
