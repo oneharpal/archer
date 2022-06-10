@@ -1,6 +1,7 @@
 class RecordsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_record, only: %i[ show edit update destroy ]
+  before_action :not_permitted, only: %i[ destroy ]
 
   # GET /records or /records.json
   def index
