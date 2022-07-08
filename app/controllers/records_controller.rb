@@ -2,6 +2,7 @@ class RecordsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_record, only: %i[ show edit update destroy ]
   before_action :not_permitted, only: %i[ destroy ]
+  before_action :check_validity, only: %i[ edit update]
 
   # GET /records or /records.json
   def index
@@ -69,4 +70,23 @@ class RecordsController < ApplicationController
     def record_params
       params.require(:record).permit(:name, :description, :expense, :amount, :order_on, :project_id)
     end
+
+    #Temporary permission block
+    def not_permitted
+      respond_to do |format|
+        format.html { redirect_to record_url(@record), notice: "Restricted." }
+        format.json { render :show, status: :created, location: @record }
+      end
+    end
+
+    #check update time
+    def check_validity
+      unless @record.updation_valid?
+        respond_to do |format|
+          format.html { redirect_to record_url(@record), notice: "Updation Restricted." }
+          format.json { render :show, status: :created, location: @record }
+        end
+      end
+    end
+    
 end
