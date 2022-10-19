@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_project, only: %i[ show edit update destroy ]
+  before_action :set_project, only: %i[ show edit update destroy create_record]
   before_action :not_permitted, only: %i[ destroy update]
   # GET /projects or /projects.json
   def index
@@ -9,6 +9,7 @@ class ProjectsController < ApplicationController
 
   # GET /projects/1 or /projects/1.json
   def show
+    @record = @project.records.build
   end
 
   # GET /projects/new
@@ -48,6 +49,21 @@ class ProjectsController < ApplicationController
     end
   end
 
+  # POST /records or /records.json
+  def create_record
+    @record = @project.records.new(record_params)
+
+    respond_to do |format|
+      if @record.save
+        format.html { redirect_to project_url(@record.project_id), notice: "Record was successfully created." }
+        format.json { render :show, status: :created, location: @record }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @record.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   # DELETE /projects/1 or /projects/1.json
   def destroy
     @project.destroy
@@ -69,8 +85,12 @@ class ProjectsController < ApplicationController
       params.require(:project).permit(:name)
     end
 
-    #Temporary permission block
+    # Only allow a list of trusted parameters through.
+    def record_params
+      params.require(:record).permit(:name, :description, :expense, :amount, :order_on)
+    end
 
+    #Temporary permission block
     def not_permitted
       respond_to do |format|
         format.html { redirect_to project_url(@project), notice: "Restricted." }

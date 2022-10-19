@@ -34,7 +34,7 @@
     <p>Total spent: <%= @project.records.sum(:amount)%> </p>
     <hr/>
   </div>
-<%= link_to "New record", new_record_path %>
+  <%= render "new_record", record: @record %>
 
   <%#= button_to "Destroy this project", @project, method: :delete %>
 </div>
